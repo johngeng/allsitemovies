@@ -1,18 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {Link, Route, Routes} from 'react-router-dom';
+
+import Home from './Home';
+import MovieDetails from './MovieDetails';
 import MovieList from './MovieList';
+import { IMovie } from './MovieDetails';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>
-          WOOKIE MOVIES
-        </h1>
-        <div><input type="text" /></div>
-      </header>
-      <MovieList />
+      <Routes>
+        <Route path="/" element={ <Home /> } />
+        <Route path="/movies" element={ <MovieList /> } />
+        <Route path="/movies/:slug" element={ <MovieDetails movie={undefined} /> } />
+      </Routes>
     </div>
   );
 }
