@@ -3,6 +3,10 @@ import { useParams } from 'react-router-dom';
 import MovieHighlights from './MovieHighlights';
 import Header from './Header';
 import MovieList from './MovieList';
+import Rating from './Ratings';
+
+import './App.css';
+
 export interface IMovie{
     id:string,
     imdb_rating:number,
@@ -30,6 +34,11 @@ export default function MovieDetails(props:{movie:IMovie|undefined}){
         setSearchResults(results);
     }
 
+    const HandleSelected = (movie:IMovie) =>{
+        setSearchResults(undefined);
+        location.reload();
+    }
+
     const getData = () => {
         const headers = {"Authorization": "Bearer Wookie2021"};
         fetch(`https://wookie.codesubmit.io/movies/${slug}`, { headers })
@@ -44,15 +53,15 @@ export default function MovieDetails(props:{movie:IMovie|undefined}){
     }, []);
 
     const movieDetails = movie!=null&&searchResults==null?
-        <div>
-            <img src={movie.backdrop} />
-            <h3>{movie.title} <span>{movie.imdb_rating}</span></h3>
-            <div><span>{movie.released_on.toString()}</span> | <span>{movie.length}</span> | <span>{movie.director}</span></div>
-            <div><label>cast:</label>{movie.cast.join(",")}</div>
+        <div className="moviedetails">
+            <div className="poster"><img src={movie.poster} /></div>
+            <h3>{movie.title} <span>{movie.imdb_rating}</span> <span className="rating">{<Rating rating={movie.imdb_rating} />}</span> </h3>
+            <div><span>{new Date(parseInt(movie.released_on.toString())).getFullYear()}</span> | <span>{movie.length}</span> | <span>{movie.director}</span></div>
+            <div>{movie.cast.join(",")}</div>
             <p>{movie.overview}</p>
         </div>
         :'';
-    const showSearchResults = searchResults?<MovieList searchResults={searchResults} />:'';
+    const showSearchResults = searchResults?<MovieList searchResults={searchResults} OnSelected={HandleSelected} />:'';
     return (
         <>
         <Header OnSearch={HandleSearch} />

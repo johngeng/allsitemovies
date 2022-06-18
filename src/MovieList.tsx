@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import MovieHighlight from './MovieHighlights';
 import { IMovie } from './MovieDetails';
 
-export default function MovieList(props:{searchResults:Set<IMovie>|undefined}){
+export default function MovieList(props:{searchResults:Set<IMovie>|undefined, OnSelected:Function}){
 
   let movies : Set<IMovie[]> = new Set();
   let moviesInGenre : Record<string,Set<IMovie>> = {};
@@ -36,8 +36,12 @@ export default function MovieList(props:{searchResults:Set<IMovie>|undefined}){
     getData();
   }, [])
 
+  const HandleSelect = ()=>{
+      props.OnSelected();
+  }
+
   const list = state==null?'': Object.keys(state).map((g)=>(
-                    <div key={g}>
+                    <div className="movielist" key={g}>
                        <h2 >{g}</h2>
                        <ul>
                            <MovieHighlight movies={state![g]} />
@@ -45,14 +49,12 @@ export default function MovieList(props:{searchResults:Set<IMovie>|undefined}){
                     </div>
                        ));  
 
-  if(props.searchResults){
-
-      Array.from(props.searchResults).map((s)=>{
-          console.log(s);
-      });
-  }
-
-  const searchResults = props.searchResults && Object.keys(props.searchResults).length>0? <MovieHighlight movies={props.searchResults} />:null;  
+  const searchResults = props.searchResults && Object.keys(props.searchResults).length>0? 
+                  <div className="movielist"> 
+                      <h2>Search Result:</h2>
+                      <ul onClick={HandleSelect}><MovieHighlight movies={props.searchResults} /></ul>
+                  </div>
+                  :null;  
     return (
        <>
         {searchResults?searchResults:list}

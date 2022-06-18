@@ -16,7 +16,7 @@ function Home(){
 	return (
 		<div>
 			<Header OnSearch={HandleSearch} />
-			<MovieList searchResults={searchResults} />
+			<MovieList searchResults={searchResults} OnSelected={()=>{}} />
 		</div>
 		);
 }
