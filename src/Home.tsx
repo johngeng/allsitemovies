@@ -1,19 +1,22 @@
 
 import React from 'react';
-import { useState, useEffect } from 'react'
-
+import { useState, useEffect } from 'react';
+import Header from './Header';
 import MovieList from './MovieList';
-import { Link } from "react-router-dom";
+import {Link} from 'react-router-dom';
+import {IMovie} from './MovieDetails';
 
 function Home(){
+	const [searchResults,setSearchResults] = React.useState<Set<IMovie>>();
 
+	const HandleSearch = (results:Set<IMovie>)=>{
+
+		setSearchResults(results);
+	}
 	return (
 		<div>
-			<header className="App-header">
-				<Link to="/"><h1>WOOKIE MOVIES</h1></Link>
-				<div><input type="text" /></div>
-			</header>
-			<MovieList />
+			<Header OnSearch={HandleSearch} />
+			<MovieList searchResults={searchResults} />
 		</div>
 		);
 }

@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react'
 import MovieHighlight from './MovieHighlights';
 import { IMovie } from './MovieDetails';
 
-export default function MovieList(){
-  //const [genres,setGenres] = useState<string[]>();
+export default function MovieList(props:{searchResults:Set<IMovie>|undefined}){
 
   let movies : Set<IMovie[]> = new Set();
   let moviesInGenre : Record<string,Set<IMovie>> = {};
@@ -30,20 +29,13 @@ export default function MovieList(){
 
           }).then(()=>{
               setState(moviesInGenre);
-               console.log(moviesInGenre);
           });
   }
 
   useEffect(() => {
-      getData();
+    getData();
   }, [])
 
-  // const list = genres==null?'': genres.map((e,index)=>(
-  //                       <li key={index}>
-  //                          <Link to="/movies"><h2>{e}</h2></Link>
-  //                          <MovieHighlight Genre={e} />
-  //                       </li> 
-  //                       ));
   const list = state==null?'': Object.keys(state).map((g)=>(
                     <div key={g}>
                        <h2 >{g}</h2>
@@ -51,10 +43,19 @@ export default function MovieList(){
                            <MovieHighlight movies={state![g]} />
                        </ul>
                     </div>
-                       ));           
+                       ));  
+
+  if(props.searchResults){
+
+      Array.from(props.searchResults).map((s)=>{
+          console.log(s);
+      });
+  }
+
+  const searchResults = props.searchResults && Object.keys(props.searchResults).length>0? <MovieHighlight movies={props.searchResults} />:null;  
     return (
        <>
-        {list}
+        {searchResults?searchResults:list}
          </>
     );
 }

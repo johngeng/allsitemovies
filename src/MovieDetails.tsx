@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import MovieHighlights from './MovieHighlights';
-
+import Header from './Header';
+import MovieList from './MovieList';
 export interface IMovie{
     id:string,
     imdb_rating:number,
@@ -22,6 +23,13 @@ export interface IMovie{
 export default function MovieDetails(props:{movie:IMovie|undefined}){
     const slug = props.movie?props.movie.id:useParams()["slug"];
     const [movie,setMovie] = useState<IMovie|undefined>();
+    const [searchResults,setSearchResults] = React.useState<Set<IMovie>>();
+
+    const HandleSearch = (results:Set<IMovie>)=>{
+
+        setSearchResults(results);
+    }
+
     const getData = () => {
         const headers = {"Authorization": "Bearer Wookie2021"};
         fetch(`https://wookie.codesubmit.io/movies/${slug}`, { headers })
@@ -33,9 +41,9 @@ export default function MovieDetails(props:{movie:IMovie|undefined}){
   
     useEffect(()=>{
         getData();
-    });
+    }, []);
 
-    const movieDetails = movie!=null?
+    const movieDetails = movie!=null&&searchResults==null?
         <div>
             <img src={movie.backdrop} />
             <h3>{movie.title} <span>{movie.imdb_rating}</span></h3>
@@ -44,7 +52,12 @@ export default function MovieDetails(props:{movie:IMovie|undefined}){
             <p>{movie.overview}</p>
         </div>
         :'';
+    const showSearchResults = searchResults?<MovieList searchResults={searchResults} />:'';
     return (
-        <>{movieDetails}</>
+        <>
+        <Header OnSearch={HandleSearch} />
+        {movieDetails}
+        {showSearchResults}
+        </>
     );
 }

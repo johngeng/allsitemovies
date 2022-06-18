@@ -11,7 +11,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={ <Home /> } />
-        <Route path="/movies" element={ <MovieList /> } />
+        <Route path="/movies" element={ <MovieList searchResults={undefined} /> } />
         <Route path="/movies/:slug" element={ <MovieDetails movie={undefined} /> } />
       </Routes>
     </div>
